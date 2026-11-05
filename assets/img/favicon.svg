@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="8" fill="#1B6542"/>
+  <rect x="7" y="7" width="50" height="50" rx="4" fill="none" stroke="#F0E0B8" stroke-width="2"/>
+  <text x="32" y="36" text-anchor="middle" dominant-baseline="central"
+        font-family="Archivo, Arial, sans-serif" font-weight="700" font-size="24"
+        letter-spacing="-1" fill="#F4EFE4">CCA</text>
+  <rect x="22" y="46" width="20" height="2.4" fill="#CBA653"/>
+</svg>
