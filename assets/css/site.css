@@ -562,7 +562,9 @@ p { max-width: var(--measure); }
 .due-in { font-size: .78rem; color: var(--ink-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .almanac-foot { margin-top: .9rem; padding-top: .8rem; border-top: 1px solid var(--paper-rule); }
 .almanac-foot .label { display: block; color: var(--ink-faint); margin-bottom: .35rem; }
-.almanac-note { margin: 0; font-size: .82rem; color: var(--ink-soft); max-width: none; }
+/* o painel é de papel dentro da seção verde: garante tinta escura, vencendo .on-green p */
+.almanac p { color: var(--ink); }
+.almanac .almanac-note { margin: 0; font-size: .82rem; color: var(--ink-soft); max-width: none; }
 
 @media (max-width: 920px) {
   .almanac { justify-self: start; }
