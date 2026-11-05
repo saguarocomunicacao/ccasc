@@ -1,0 +1,50 @@
+name: Deploy ccasc.dev.br
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-ccasc
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare SSH
+        run: |
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/deploy_key"
+          chmod 600 "$HOME/.ssh/deploy_key"
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > "$HOME/.ssh/known_hosts"
+          chmod 644 "$HOME/.ssh/known_hosts"
+
+      - name: Deploy (tar over SSH)
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -euo pipefail
+          SSH="ssh -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -p $SSH_PORT"
+
+          # 1) Remove apenas o conteúdo do site no docroot, preservando os
+          #    arquivos do cPanel e o AutoSSL (.well-known).
+          $SSH "$SSH_USER@$SSH_HOST" "cd '$DEPLOY_PATH' && find . -maxdepth 1 -mindepth 1 \
+            ! -name '.well-known' ! -name 'cgi-bin' ! -name '.htaccess' \
+            ! -name '.user.ini' ! -name 'php.ini' ! -name '.ftpquota' \
+            -exec rm -rf {} +"
+
+          # 2) Envia os arquivos do repositório (sem metadados de git).
+          tar czf - \
+            --exclude='./.git' --exclude='./.github' \
+            --exclude='./README.md' --exclude='./.gitignore' --exclude='./.DS_Store' \
+            . | $SSH "$SSH_USER@$SSH_HOST" "tar xzf - -C '$DEPLOY_PATH'"
+
+          echo "Deploy concluído em $DEPLOY_PATH"
