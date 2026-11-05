@@ -32,6 +32,12 @@ jobs:
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
           set -euo pipefail
+
+          # Cache-busting: versiona CSS/JS com o hash do commit para as
+          # mudanças aparecerem na hora (sem esperar o cache do navegador).
+          VER="${GITHUB_SHA:0:8}"
+          sed -i -E "s#(assets/(css/site\.css|js/site\.js))#\1?v=$VER#g" *.html
+
           SSH="ssh -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -p $SSH_PORT"
 
           # 1) Remove apenas o conteúdo do site no docroot, preservando os
