@@ -32,7 +32,7 @@
 
   /* --------------------------------------------- marca a página na navegação */
   var page = document.body.getAttribute("data-page");
-  var mapa = { home: "index.html", servicos: "servicos.html", sobre: "sobre.html", contato: "contato.html" };
+  var mapa = { home: "/", servicos: "/servicos", sobre: "/sobre", contato: "/contato" };
   if (mapa[page]) {
     document.querySelectorAll('.nav a[href="' + mapa[page] + '"]').forEach(function (a) {
       if (!a.classList.contains("btn")) a.setAttribute("aria-current", "page");
@@ -77,17 +77,34 @@
   }
   function stripTime(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 
-  var box = document.querySelector("[data-next-due]");
-  if (box) {
-    var pv = proximoVencimento(hoje);
-    var dias = Math.round((stripTime(pv.data) - stripTime(hoje)) / 86400000);
-    var quando = dias === 0 ? "é <strong>hoje</strong>" : dias === 1 ? "<strong>amanhã</strong>" : "em <strong>" + dias + "</strong> dias";
-    box.innerHTML =
-      '<p class="ticket-date num">' + pad(pv.data.getDate()) + '<span class="ticket-mo">/' + MESES[pv.data.getMonth()] + '</span></p>' +
-      '<p class="ticket-name">' + pv.nome + '</p>' +
-      '<p class="ticket-in num">' + quando + '</p>';
-  }
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
+
+  // Data de hoje no painel do herói
+  var hojeEl = document.querySelector("[data-today]");
+  if (hojeEl) hojeEl.textContent = pad(hoje.getDate()) + "/" + MESES[hoje.getMonth()];
+
+  // Lista dos próximos N vencimentos (ilustrativo)
+  function proximos(base, n) {
+    var out = [], d = stripTime(base);
+    for (var i = 0; i < 160 && out.length < n; i++) {
+      var cur = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
+      for (var k = 0; k < RECORRENTES.length; k++) {
+        if (cur.getDate() === RECORRENTES[k].dia) out.push({ data: cur, nome: RECORRENTES[k].nome });
+      }
+    }
+    return out.slice(0, n);
+  }
+  var lista = document.querySelector("[data-due-list]");
+  if (lista) {
+    lista.innerHTML = proximos(hoje, 3).map(function (it) {
+      var dias = Math.round((stripTime(it.data) - stripTime(hoje)) / 86400000);
+      var q = dias === 0 ? "hoje" : dias === 1 ? "amanhã" : "em " + dias + " dias";
+      return '<li><span class="due-date num">' + pad(it.data.getDate()) +
+             '<span class="due-mo">' + MESES[it.data.getMonth()] + '</span></span>' +
+             '<span class="due-name">' + it.nome + '</span>' +
+             '<span class="due-in num">' + q + '</span></li>';
+    }).join("");
+  }
 
   /* ------------------------------------------------------- rail do ano fiscal */
   var DADOS = [

@@ -37,7 +37,7 @@ jobs:
           # 1) Remove apenas o conteúdo do site no docroot, preservando os
           #    arquivos do cPanel e o AutoSSL (.well-known).
           $SSH "$SSH_USER@$SSH_HOST" "cd '$DEPLOY_PATH' && find . -maxdepth 1 -mindepth 1 \
-            ! -name '.well-known' ! -name 'cgi-bin' ! -name '.htaccess' \
+            ! -name '.well-known' ! -name 'cgi-bin' \
             ! -name '.user.ini' ! -name 'php.ini' ! -name '.ftpquota' \
             -exec rm -rf {} +"
 

@@ -512,3 +512,59 @@ p { max-width: var(--measure); }
 @media (max-width: 560px) {
   .field-row { grid-template-columns: 1fr; }
 }
+
+/* =========================================================================
+   MARCA (logo real vazado) + HERÓI ENRIQUECIDO
+   ========================================================================= */
+.brand-logo { height: 27px; width: auto; display: block; flex: 0 0 auto; }
+.brand-desc {
+  font-size: .64rem; font-weight: 600; letter-spacing: .13em; line-height: 1.42;
+  text-transform: uppercase; color: var(--brass-soft);
+}
+.site-foot .brand-desc { color: var(--brass-soft); }
+@media (max-width: 460px) { .brand-desc { display: none; } .brand-logo { height: 25px; } }
+
+/* kicker do herói com separadores em losango */
+.hero-kicker { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem .7rem; color: var(--on-green-2); font-size: .88rem; letter-spacing: .02em; }
+.hero-kicker .hk-edition { color: var(--brass-soft); font-weight: 600; letter-spacing: .04em; }
+.hero-kicker .hk-dot { width: 5px; height: 5px; background: var(--brass); transform: rotate(45deg); flex: 0 0 auto; }
+
+/* resumo de credenciais (linha de almanaque, não cards de métrica) */
+.hero-facts {
+  display: flex; flex-wrap: wrap; gap: clamp(14px, 2vw, 26px);
+  margin-top: clamp(26px, 4vw, 40px); padding-top: clamp(20px, 3vw, 28px);
+  border-top: 1px solid var(--green-line); width: fit-content; max-width: 100%;
+}
+.hero-facts > div { display: flex; flex-direction: column; gap: .2rem; padding-right: clamp(14px, 2vw, 26px); border-right: 1px solid var(--green-line); }
+.hero-facts > div:last-child { border-right: none; padding-right: 0; }
+.hero-facts dt { font-size: .64rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--brass-soft); }
+.hero-facts dd { margin: 0; font-size: 1rem; font-weight: 600; color: var(--on-green); line-height: 1.2; }
+
+/* painel: agenda fiscal viva (próximos vencimentos) */
+.almanac {
+  justify-self: end; width: min(100%, 388px); align-self: start;
+  background: var(--paper); color: var(--ink);
+  border-top: 3px solid var(--brass); box-shadow: var(--shadow-card);
+  padding: clamp(18px, 2vw, 26px); position: relative;
+}
+.almanac::before, .almanac::after { content: ""; position: absolute; top: -3px; width: 14px; height: 14px; background: var(--green-deep); border-radius: 50%; }
+.almanac::before { left: -7px; } .almanac::after { right: -7px; }
+.almanac-head { display: flex; justify-content: space-between; align-items: center; gap: .6rem; padding-bottom: .8rem; border-bottom: 1px solid var(--paper-rule); }
+.almanac-head .label { color: var(--brass-deep); }
+.almanac-live { display: inline-flex; align-items: center; gap: .45em; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
+.almanac-live .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex: 0 0 auto; }
+.almanac-list { list-style: none; padding: 0; margin: 0; }
+.almanac-list li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .9rem; padding: .85rem 0; border-bottom: 1px solid var(--paper-rule); }
+.due-date { display: flex; flex-direction: column; align-items: center; line-height: 1; font-weight: 700; font-size: 1.55rem; color: var(--green); font-variant-numeric: tabular-nums; min-width: 1.7em; }
+.almanac-list li:first-child .due-date { color: var(--brass-deep); }
+.due-mo { font-size: .42em; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-top: .25em; }
+.due-name { font-weight: 600; font-size: .98rem; }
+.due-in { font-size: .78rem; color: var(--ink-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.almanac-foot { margin-top: .9rem; padding-top: .8rem; border-top: 1px solid var(--paper-rule); }
+.almanac-foot .label { display: block; color: var(--ink-faint); margin-bottom: .35rem; }
+.almanac-note { margin: 0; font-size: .82rem; color: var(--ink-soft); max-width: none; }
+
+@media (max-width: 920px) {
+  .almanac { justify-self: start; }
+  .hero-facts { width: 100%; }
+}
